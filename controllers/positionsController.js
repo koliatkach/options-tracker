@@ -13,19 +13,22 @@ const getPositions = async (req, res, next) => {
 // POST /api/positions
 const createPosition = async (req, res, next) => {
     try {
-        const { date, ticker, entry, qty, reason, type, riskPercent } = req.body;
+        const { date, ticker, entry, qty, reason, type, stopSize } = req.body;
 
         if (!date || !ticker || typeof entry !== 'number' || typeof qty !== 'number' || qty === 0) {
-            return res.status(400).json({ error: 'Невірні дані. Перевір дата, тікер, ціну входу, кількість.' });
+            return res.status(400).json({ error: 'Невірні дані. Перевір дату, тікер, ціну входу, кількість.' });
         }
 
         if (!type || !['options', 'futures', 'spot'].includes(type)) {
             return res.status(400).json({ error: 'Тип обовʼязковий (options / futures / spot).' });
         }
 
-        let riskVal = null;
-        if (typeof riskPercent === 'number' && !isNaN(riskPercent)) {
-            riskVal = riskPercent;
+        let stopVal = null;
+        if (type === 'futures') {
+            if (typeof stopSize !== 'number' || isNaN(stopSize) || stopSize <= 0) {
+                return res.status(400).json({ error: 'Для фʼючерсів потрібно вказати довжину стопу > 0.' });
+            }
+            stopVal = stopSize;
         }
 
         const position = await Position.create({
@@ -35,7 +38,7 @@ const createPosition = async (req, res, next) => {
             entry,
             totalQty: qty,
             openQty: qty,
-            riskPercent: riskVal,
+            stopSize: stopVal,
             reason: reason || '',
             closes: []
         });

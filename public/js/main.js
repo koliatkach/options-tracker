@@ -8,6 +8,18 @@
     document.getElementById('inp-date').valueAsDate = new Date();
     document.getElementById('modal-exit-date').valueAsDate = new Date();
 
+    // показ/приховування поля стопу для фʼючерсів
+    const typeSelect = document.getElementById('inp-type');
+    const stopGroup = document.getElementById('group-stop');
+    typeSelect.addEventListener('change', () => {
+        if (typeSelect.value === 'futures') {
+            stopGroup.style.display = '';
+        } else {
+            stopGroup.style.display = 'none';
+            document.getElementById('inp-stop').value = '';
+        }
+    });
+
     // ініціалізація модалів
     Modals.init(async (data) => {
         try {
@@ -65,7 +77,7 @@
         const type = document.getElementById('inp-type').value;
         const entry = parseFloat(document.getElementById('inp-entry').value);
         const qty = parseFloat(document.getElementById('inp-qty').value);
-        const riskStr = document.getElementById('inp-risk').value;
+        const stopStr = document.getElementById('inp-stop').value;
         const reason = document.getElementById('inp-reason').value.trim();
 
         if (!date || !ticker || !type || isNaN(entry) || isNaN(qty) || qty === 0) {
@@ -73,16 +85,30 @@
             return;
         }
 
+        let stopSize = null;
+        if (type === 'futures') {
+            if (!stopStr) {
+                alert('Для фʼючерсів потрібно вказати довжину стопу');
+                return;
+            }
+            stopSize = parseFloat(stopStr);
+            if (isNaN(stopSize) || stopSize <= 0) {
+                alert('Довжина стопу має бути > 0');
+                return;
+            }
+        }
+
         try {
-            await API.createPosition({ date, ticker, type, entry, qty, reason });
+            await API.createPosition({ date, ticker, type, entry, qty, reason, stopSize });
             await loadAndRender();
 
             document.getElementById('inp-ticker').value = '';
             document.getElementById('inp-type').value = '';
             document.getElementById('inp-entry').value = '';
             document.getElementById('inp-qty').value = '';
-            document.getElementById('inp-risk').value = '';
+            document.getElementById('inp-stop').value = '';
             document.getElementById('inp-reason').value = '';
+            stopGroup.style.display = 'none';
         } catch (e) {
             alert(e.message);
         }

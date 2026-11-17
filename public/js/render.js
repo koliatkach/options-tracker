@@ -3,11 +3,45 @@ const Render = {
     _onClose: null,
     _onDetail: null,
     _onDelete: null,
+    _DEPOSIT: 30000,
 
     init(onClose, onDetail, onDelete) {
         this._onClose = onClose;
         this._onDetail = onDetail;
         this._onDelete = onDelete;
+    },
+
+    _calcPnL(position) {
+        return position.closes.reduce((s, c) => {
+            const comm = typeof c.commission === 'number' ? c.commission : 0;
+            return s + ((c.price - position.entry) * c.qty - comm);
+        }, 0);
+    },
+
+    _calcRiskPercent(position) {
+        const absQty = Math.abs(position.totalQty || 0);
+        const entry = Number(position.entry) || 0;
+
+        if (!absQty || !entry || !this._DEPOSIT) return null;
+
+        let riskAbs = 0;
+
+        if (position.type === 'options') {
+            // Твоя формула: (ціна входу * кількість) / 30000
+            riskAbs = entry * absQty;
+        } else if (position.type === 'futures') {
+            const stop = Number(position.stopSize) || 0;
+            if (!stop) return null;
+            riskAbs = absQty * stop;
+        } else if (position.type === 'spot') {
+            riskAbs = absQty * entry;
+        } else {
+            return null;
+        }
+
+        if (!riskAbs) return null;
+
+        return (riskAbs / this._DEPOSIT) * 100;
     },
 
     positions(positions, filters) {
@@ -30,13 +64,8 @@ const Render = {
             return;
         }
 
-        const pnlOf = (p) => p.closes.reduce((s, c) => {
-            const comm = typeof c.commission === 'number' ? c.commission : 0;
-            return s + ((c.price - p.entry) * c.qty - comm);
-        }, 0);
-
         const rows = filtered.map(p => {
-            const pnl = pnlOf(p);
+            const pnl = this._calcPnL(p);
             const isOpen = Math.abs(p.openQty) >= 1e-9;
 
             const pnlHtml = p.closes.length
@@ -51,8 +80,9 @@ const Render = {
                 ? (p.reason.length > 30 ? p.reason.slice(0, 27) + '...' : p.reason)
                 : '—';
 
-            const riskStr = typeof p.riskPercent === 'number'
-                ? `${p.riskPercent}%`
+            const riskPercent = this._calcRiskPercent(p);
+            const riskStr = riskPercent != null
+                ? `${riskPercent.toFixed(2)}%`
                 : '—';
 
             return `

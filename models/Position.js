@@ -51,9 +51,10 @@ const PositionSchema = new mongoose.Schema({
         type: Number,
         required: true
     },
-    riskPercent: {              // ← НОВЕ ПОЛЕ
+    // тільки для фʼючерсів: довжина стопу в ціні
+    stopSize: {
         type: Number,
-        default: null           // збережемо як число (наприклад 1 = 1%)
+        default: null
     },
     reason: {
         type: String,
