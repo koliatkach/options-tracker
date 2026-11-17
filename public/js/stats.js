@@ -9,12 +9,16 @@ const Stats = {
 
     update(positions) {
         const totalPositions = positions.length;
-        const totalOpenQty = positions.reduce((sum, p) => sum + p.openQty, 0);
+
+        // Кількість відкритих угод (позицій з ненульовим openQty)
+        const openTradesCount = positions.filter(
+            p => Math.abs(p.openQty) >= 1e-9
+        ).length;
+
         const totalPnL = positions.reduce((sum, p) => sum + this.calcPnL(p), 0);
 
         document.getElementById('stat-total').textContent = totalPositions;
-        document.getElementById('stat-open').textContent =
-            totalOpenQty.toFixed(4).replace(/\.?0+$/, '');
+        document.getElementById('stat-open').textContent = openTradesCount;
 
         const pnlEl = document.getElementById('stat-pnl');
         pnlEl.textContent = `${totalPnL >= 0 ? '+' : ''}$${totalPnL.toFixed(2)}`;

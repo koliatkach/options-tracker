@@ -51,6 +51,10 @@ const Render = {
                 ? (p.reason.length > 30 ? p.reason.slice(0, 27) + '...' : p.reason)
                 : '—';
 
+            const riskStr = typeof p.riskPercent === 'number'
+                ? `${p.riskPercent}%`
+                : '—';
+
             return `
                 <tr>
                     <td>${p.date}</td>
@@ -58,6 +62,7 @@ const Render = {
                     <td>${p.entry}</td>
                     <td>${p.totalQty}</td>
                     <td>${p.openQty.toFixed(4).replace(/\.?0+$/, '')}</td>
+                    <td>${riskStr}</td>
                     <td>${reason}</td>
                     <td>${pnlHtml}</td>
                     <td>${statusBadge}</td>
@@ -87,6 +92,7 @@ const Render = {
                         <th>Ціна входу</th>
                         <th>Початк. qty</th>
                         <th>Відкритий qty</th>
+                        <th>Ризик %</th>
                         <th>Причина</th>
                         <th>P&L</th>
                         <th>Статус</th>

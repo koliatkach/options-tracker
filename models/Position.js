@@ -17,7 +17,7 @@ const CloseSchema = new mongoose.Schema({
         type: String,
         default: ''
     },
-        commission: {              
+    commission: {
         type: Number,
         default: 0
     }
@@ -50,6 +50,10 @@ const PositionSchema = new mongoose.Schema({
     openQty: {
         type: Number,
         required: true
+    },
+    riskPercent: {              // ← НОВЕ ПОЛЕ
+        type: Number,
+        default: null           // збережемо як число (наприклад 1 = 1%)
     },
     reason: {
         type: String,

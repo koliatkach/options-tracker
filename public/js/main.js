@@ -65,6 +65,7 @@
         const type = document.getElementById('inp-type').value;
         const entry = parseFloat(document.getElementById('inp-entry').value);
         const qty = parseFloat(document.getElementById('inp-qty').value);
+        const riskStr = document.getElementById('inp-risk').value;
         const reason = document.getElementById('inp-reason').value.trim();
 
         if (!date || !ticker || !type || isNaN(entry) || isNaN(qty) || qty === 0) {
@@ -80,6 +81,7 @@
             document.getElementById('inp-type').value = '';
             document.getElementById('inp-entry').value = '';
             document.getElementById('inp-qty').value = '';
+            document.getElementById('inp-risk').value = '';
             document.getElementById('inp-reason').value = '';
         } catch (e) {
             alert(e.message);

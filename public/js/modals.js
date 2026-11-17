@@ -53,12 +53,17 @@ const Modals = {
                    (c.notes ? ' — ' + c.notes : '');
         }).join('\n');
 
+        const riskText = typeof position.riskPercent === 'number'
+            ? `Ризик від депозиту: ${position.riskPercent}%\n`
+            : '';
+
         const text =
             `Дата входу: ${position.date}\n` +
             `Тікер: ${position.ticker}\n` +
             `Тип: ${this._formatType(position.type)}\n` +
             `Ціна входу: ${position.entry}\n` +
             `Кількість: ${position.totalQty}\n` +
+            riskText +
             (position.reason ? `Причина: ${position.reason}\n` : '') +
             '\n' +
             (position.closes.length ? 'Виходи:\n' + closesInfo : 'Виходів ще немає');

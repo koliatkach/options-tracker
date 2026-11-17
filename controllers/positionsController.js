@@ -13,7 +13,7 @@ const getPositions = async (req, res, next) => {
 // POST /api/positions
 const createPosition = async (req, res, next) => {
     try {
-        const { date, ticker, entry, qty, reason, type } = req.body;
+        const { date, ticker, entry, qty, reason, type, riskPercent } = req.body;
 
         if (!date || !ticker || typeof entry !== 'number' || typeof qty !== 'number' || qty === 0) {
             return res.status(400).json({ error: 'Невірні дані. Перевір дата, тікер, ціну входу, кількість.' });
@@ -23,6 +23,11 @@ const createPosition = async (req, res, next) => {
             return res.status(400).json({ error: 'Тип обовʼязковий (options / futures / spot).' });
         }
 
+        let riskVal = null;
+        if (typeof riskPercent === 'number' && !isNaN(riskPercent)) {
+            riskVal = riskPercent;
+        }
+
         const position = await Position.create({
             date,
             ticker,
@@ -30,6 +35,7 @@ const createPosition = async (req, res, next) => {
             entry,
             totalQty: qty,
             openQty: qty,
+            riskPercent: riskVal,
             reason: reason || '',
             closes: []
         });
