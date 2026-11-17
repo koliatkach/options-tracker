@@ -1,0 +1,246 @@
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #0f0f0f;
+    color: #e0e0e0;
+    padding: 20px;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #4ade80;
+    font-size: 24px;
+}
+
+.container { max-width: 1100px; margin: 0 auto; }
+
+/* Картки */
+.card {
+    background: #1a1a1a;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 24px;
+    border: 1px solid #2a2a2a;
+}
+
+.card h2 {
+    margin-bottom: 16px;
+    color: #4ade80;
+    font-size: 18px;
+}
+
+/* Форма */
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    margin-bottom: 12px;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+label { font-size: 13px; color: #888; }
+
+input, textarea, select {
+    background: #2a2a2a;
+    border: 1px solid #3a3a3a;
+    border-radius: 8px;
+    padding: 8px 10px;
+    color: #e0e0e0;
+    font-size: 14px;
+    outline: none;
+    transition: border 0.15s;
+}
+
+input:focus, textarea:focus, select:focus { border-color: #4ade80; }
+
+textarea {
+    resize: vertical;
+    min-height: 60px;
+    grid-column: 1 / -1;
+}
+
+/* Кнопки */
+.btn-primary, .btn-secondary, .btn-icon {
+    border-radius: 8px;
+    padding: 8px 14px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    border: none;
+    transition: all 0.15s;
+}
+
+.btn-primary { background: #4ade80; color: #0f0f0f; }
+.btn-primary:hover { background: #22c55e; }
+
+.btn-secondary {
+    background: #2a2a2a;
+    color: #e0e0e0;
+    border: 1px solid #3a3a3a;
+}
+
+.btn-secondary:hover { background: #3a3a3a; }
+.btn-secondary:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.btn-icon {
+    background: transparent;
+    color: #888;
+    padding: 4px 8px;
+    font-size: 16px;
+}
+
+.btn-icon:hover { color: #f87171; }
+
+/* Статистика */
+.stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    margin-bottom: 24px;
+}
+
+.stat-card {
+    background: #1a1a1a;
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+    border: 1px solid #2a2a2a;
+}
+
+.stat-card .value {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 4px;
+}
+
+.stat-card .label { font-size: 12px; color: #888; }
+
+.green { color: #4ade80; }
+.red { color: #f87171; }
+.white { color: #e0e0e0; }
+
+/* Хедер таблиці */
+.header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.header-row-right {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.filter-select {
+    background: #2a2a2a;
+    color: #e0e0e0;
+    border-radius: 8px;
+    border: 1px solid #3a3a3a;
+    padding: 6px 10px;
+    font-size: 13px;
+}
+
+/* Таблиця */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+}
+
+th {
+    text-align: left;
+    padding: 10px;
+    color: #888;
+    font-weight: 500;
+    border-bottom: 1px solid #2a2a2a;
+    font-size: 12px;
+    text-transform: uppercase;
+}
+
+td {
+    padding: 10px;
+    border-bottom: 1px solid #1f1f1f;
+    vertical-align: middle;
+}
+
+tr:hover { background: #222; }
+
+/* Бейджи */
+.badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 600;
+}
+
+.badge-open { background: #1e3a5f; color: #60a5fa; }
+.badge-closed { background: #2a2a2a; color: #888; }
+
+/* Empty state */
+.empty-state {
+    text-align: center;
+    padding: 32px;
+    color: #555;
+}
+
+.empty-state span {
+    font-size: 36px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+/* Модальні вікна */
+.modal {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.7);
+    z-index: 100;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal.active { display: flex; }
+
+.modal-content {
+    background: #1a1a1a;
+    border-radius: 12px;
+    padding: 20px;
+    width: 360px;
+    border: 1px solid #2a2a2a;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modal-content h3 { color: #4ade80; }
+
+.modal-content p {
+    color: #aaa;
+    font-size: 13px;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 8px;
+    margin-top: 4px;
+}
+
+.modal-actions button { flex: 1; }
+
+@media (max-width: 700px) {
+    .header-row { flex-direction: column; align-items: flex-start; }
+}

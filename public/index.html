@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Трекер Опціонів</title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<div class="container">
+    <h1>📊 Трекер Опціонів</h1>
+
+    <!-- Статистика -->
+    <div class="stats">
+        <div class="stat-card">
+            <div class="value white" id="stat-total">0</div>
+            <div class="label">Всього позицій</div>
+        </div>
+        <div class="stat-card">
+            <div class="value green" id="stat-open">0</div>
+            <div class="label">Відкритих (qty)</div>
+        </div>
+        <div class="stat-card">
+            <div class="value" id="stat-pnl">$0</div>
+            <div class="label">Загальний P&L</div>
+        </div>
+    </div>
+
+    <!-- Форма -->
+    <div class="card">
+        <h2>➕ Нова позиція</h2>
+        <div class="form-grid">
+            <div class="form-group">
+                <label>Дата</label>
+                <input type="date" id="inp-date">
+            </div>
+            <div class="form-group">
+                <label>Тікер</label>
+                <input type="text" id="inp-ticker" placeholder="AAPL, SPY...">
+            </div>
+            <div class="form-group">
+                <label>Ціна входу</label>
+                <input type="number" id="inp-entry" placeholder="2.50" step="0.0001">
+            </div>
+            <div class="form-group">
+                <label>Кількість</label>
+                <input type="number" id="inp-qty" placeholder="1, 0.5, -1..." step="0.0001">
+            </div>
+            <div class="form-group" style="grid-column: 1 / -1;">
+                <label>Причина</label>
+                <textarea id="inp-reason" placeholder="Чому відкрив?"></textarea>
+            </div>
+        </div>
+        <button class="btn-primary" id="btn-add">Додати</button>
+    </div>
+
+    <!-- Таблиця позицій -->
+    <div class="card">
+        <div class="header-row">
+            <h2>📋 Позиції</h2>
+            <div class="header-row-right">
+                <select id="filter-status" class="filter-select">
+                    <option value="all">Всі</option>
+                    <option value="open">Відкриті</option>
+                    <option value="closed">Закриті</option>
+                </select>
+            </div>
+        </div>
+        <div id="positions-table">
+            <div class="empty-state">
+                <span>📭</span>
+                Позицій ще немає.
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Модал закриття -->
+<div class="modal" id="close-modal">
+    <div class="modal-content">
+        <h3>Закрити позицію</h3>
+        <p id="modal-pos-info"></p>
+        <div class="form-group">
+            <label>Кількість</label>
+            <input type="number" id="modal-close-qty" step="0.0001">
+        </div>
+        <div class="form-group">
+            <label>Ціна виходу</label>
+            <input type="number" id="modal-exit-price" step="0.0001">
+        </div>
+        <div class="form-group">
+            <label>Дата виходу</label>
+            <input type="date" id="modal-exit-date">
+        </div>
+        <div class="form-group">
+            <label>Нотатка</label>
+            <textarea id="modal-exit-notes" placeholder="Чому закрив?"></textarea>
+        </div>
+        <div class="modal-actions">
+            <button class="btn-secondary" id="btn-cancel-close">Скасувати</button>
+            <button class="btn-primary" id="btn-confirm-close">Закрити</button>
+        </div>
+    </div>
+</div>
+
+<!-- Модал деталей -->
+<div class="modal" id="detail-modal">
+    <div class="modal-content">
+        <h3 id="detail-title"></h3>
+        <p id="detail-body" style="white-space: pre-wrap;"></p>
+        <div class="modal-actions">
+            <button class="btn-secondary" id="btn-close-detail">Закрити</button>
+        </div>
+    </div>
+</div>
+
+<!-- Скрипти -->
+<script src="/js/api.js"></script>
+<script src="/js/stats.js"></script>
+<script src="/js/modals.js"></script>
+<script src="/js/render.js"></script>
+<script src="/js/main.js"></script>
+</body>
+</html>
