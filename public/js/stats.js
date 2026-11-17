@@ -2,7 +2,8 @@
 const Stats = {
     calcPnL(position) {
         return position.closes.reduce((sum, c) => {
-            return sum + (c.price - position.entry) * c.qty;
+            const comm = typeof c.commission === 'number' ? c.commission : 0;
+            return sum + ((c.price - position.entry) * c.qty - comm);
         }, 0);
     },
 

@@ -49,11 +49,13 @@ const closePosition = async (req, res, next) => {
             return res.status(404).json({ error: 'Позицію не знайдено' });
         }
 
-        const { qty, price, date, notes } = req.body;
+        const { qty, price, date, notes, commission } = req.body;
 
         if (typeof qty !== 'number' || qty === 0 || typeof price !== 'number') {
             return res.status(400).json({ error: 'Невірні дані для закриття' });
         }
+
+        const comm = typeof commission === 'number' && !isNaN(commission) ? commission : 0;
 
         if (position.openQty > 0) {
             if (qty <= 0 || qty > position.openQty + 1e-9) {
@@ -71,7 +73,8 @@ const closePosition = async (req, res, next) => {
             qty,
             price,
             date: date || null,
-            notes: notes || ''
+            notes: notes || '',
+            commission: comm
         });
 
         position.openQty -= qty;

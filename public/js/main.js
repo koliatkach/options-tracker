@@ -15,7 +15,8 @@
                 qty: data.qty,
                 price: data.price,
                 date: data.date,
-                notes: data.notes
+                notes: data.notes,
+                commission: data.commission
             });
             Modals.closeClose();
             await loadAndRender();

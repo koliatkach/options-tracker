@@ -16,6 +16,10 @@ const CloseSchema = new mongoose.Schema({
     notes: {
         type: String,
         default: ''
+    },
+        commission: {              
+        type: Number,
+        default: 0
     }
 });
 

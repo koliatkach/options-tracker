@@ -30,7 +30,10 @@ const Render = {
             return;
         }
 
-        const pnlOf = (p) => p.closes.reduce((s, c) => s + (c.price - p.entry) * c.qty, 0);
+        const pnlOf = (p) => p.closes.reduce((s, c) => {
+            const comm = typeof c.commission === 'number' ? c.commission : 0;
+            return s + ((c.price - p.entry) * c.qty - comm);
+        }, 0);
 
         const rows = filtered.map(p => {
             const pnl = pnlOf(p);

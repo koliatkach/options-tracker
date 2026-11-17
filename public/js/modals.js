@@ -12,6 +12,7 @@ const Modals = {
 
         document.getElementById('modal-close-qty').value = position.openQty;
         document.getElementById('modal-exit-price').value = '';
+        document.getElementById('modal-commission').value = '';
         document.getElementById('modal-exit-notes').value = '';
         document.getElementById('modal-exit-date').valueAsDate = new Date();
 
@@ -25,12 +26,16 @@ const Modals = {
     },
 
     getCloseData() {
+        const commissionStr = document.getElementById('modal-commission').value;
+        const commission = commissionStr === '' ? 0 : parseFloat(commissionStr);
+
         return {
             id: this._closingId,
             qty: parseFloat(document.getElementById('modal-close-qty').value),
             price: parseFloat(document.getElementById('modal-exit-price').value),
             date: document.getElementById('modal-exit-date').value,
-            notes: document.getElementById('modal-exit-notes').value.trim()
+            notes: document.getElementById('modal-exit-notes').value.trim(),
+            commission: isNaN(commission) ? 0 : commission
         };
     },
 
@@ -41,9 +46,12 @@ const Modals = {
     },
 
     openDetail(position) {
-        const closesInfo = position.closes.map(c =>
-            `${c.date || ''} • qty: ${c.qty} @ ${c.price}${c.notes ? ' — ' + c.notes : ''}`
-        ).join('\n');
+        const closesInfo = position.closes.map(c => {
+            const comm = typeof c.commission === 'number' ? c.commission : 0;
+            return `${c.date || ''} • qty: ${c.qty} @ ${c.price}` +
+                   (comm ? `, комісія: ${comm}` : '') +
+                   (c.notes ? ' — ' + c.notes : '');
+        }).join('\n');
 
         const text =
             `Дата входу: ${position.date}\n` +
