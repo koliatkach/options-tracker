@@ -10,12 +10,14 @@ const Render = {
         this._onDelete = onDelete;
     },
 
-    positions(positions, filter) {
+    positions(positions, filters) {
+        const { status, type } = filters;
         const container = document.getElementById('positions-table');
 
         const filtered = positions.filter(p => {
-            if (filter === 'open' && Math.abs(p.openQty) < 1e-9) return false;
-            if (filter === 'closed' && Math.abs(p.openQty) >= 1e-9) return false;
+            if (type && p.type !== type) return false;
+            if (status === 'open' && Math.abs(p.openQty) < 1e-9) return false;
+            if (status === 'closed' && Math.abs(p.openQty) >= 1e-9) return false;
             return true;
         });
 
@@ -23,7 +25,7 @@ const Render = {
             container.innerHTML = `
                 <div class="empty-state">
                     <span>📭</span>
-                    Позицій не знайдено.
+                    Позицій не знайдено для цього типу/фільтра.
                 </div>`;
             return;
         }
@@ -94,7 +96,6 @@ const Render = {
             </table>
         `;
 
-        // Делегування подій на таблицю
         container.querySelectorAll('button[data-action]').forEach(btn => {
             btn.addEventListener('click', () => {
                 const action = btn.dataset.action;

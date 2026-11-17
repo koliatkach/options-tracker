@@ -13,7 +13,7 @@ const API = {
             body: JSON.stringify(data)
         });
         if (!res.ok) {
-            const err = await res.json();
+            const err = await res.json().catch(() => ({}));
             throw new Error(err.error || 'Помилка створення позиції');
         }
         return res.json();
@@ -26,7 +26,7 @@ const API = {
             body: JSON.stringify(data)
         });
         if (!res.ok) {
-            const err = await res.json();
+            const err = await res.json().catch(() => ({}));
             throw new Error(err.error || 'Помилка закриття позиції');
         }
         return res.json();
@@ -36,7 +36,10 @@ const API = {
         const res = await fetch(`/api/positions/${id}`, {
             method: 'DELETE'
         });
-        if (!res.ok) throw new Error('Помилка видалення позиції');
+        if (!res.ok) {
+            const err = await res.json().catch(() => ({}));
+            throw new Error(err.error || 'Помилка видалення позиції');
+        }
         return res.json();
     }
 };

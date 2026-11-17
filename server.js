@@ -20,15 +20,15 @@ app.use(express.json());
 // Статичні файли (фронтенд)
 app.use(express.static(path.join(__dirname, 'public')));
 
-// API маршрути
+// API
 app.use('/api/positions', positionsRouter);
 
-// Якщо маршрут не знайдено — повертаємо index.html
+// fallback на index.html для SPA
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// Обробка помилок (завжди останній мідлвар)
+// Обробник помилок
 app.use(errorHandler);
 
 app.listen(PORT, () => {

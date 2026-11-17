@@ -3,13 +3,12 @@ const Modals = {
     _closingId: null,
     _onCloseConfirm: null,
 
-    // Модал закриття позиції
     openClose(position, onConfirm) {
         this._closingId = position._id;
         this._onCloseConfirm = onConfirm;
 
         document.getElementById('modal-pos-info').textContent =
-            `Тікер: ${position.ticker} | Вхід: ${position.entry} | Відкрите qty: ${position.openQty}`;
+            `Тікер: ${position.ticker} | Тип: ${this._formatType(position.type)} | Вхід: ${position.entry} | Відкрите qty: ${position.openQty}`;
 
         document.getElementById('modal-close-qty').value = position.openQty;
         document.getElementById('modal-exit-price').value = '';
@@ -35,7 +34,12 @@ const Modals = {
         };
     },
 
-    // Модал деталей
+    _formatType(type) {
+        if (type === 'options') return 'Опціони';
+        if (type === 'futures') return 'Ф’ючерси';
+        return 'Спот';
+    },
+
     openDetail(position) {
         const closesInfo = position.closes.map(c =>
             `${c.date || ''} • qty: ${c.qty} @ ${c.price}${c.notes ? ' — ' + c.notes : ''}`
@@ -44,6 +48,7 @@ const Modals = {
         const text =
             `Дата входу: ${position.date}\n` +
             `Тікер: ${position.ticker}\n` +
+            `Тип: ${this._formatType(position.type)}\n` +
             `Ціна входу: ${position.entry}\n` +
             `Кількість: ${position.totalQty}\n` +
             (position.reason ? `Причина: ${position.reason}\n` : '') +
@@ -59,7 +64,6 @@ const Modals = {
         document.getElementById('detail-modal').classList.remove('active');
     },
 
-    // Ініціалізація подій
     init(onCloseConfirm) {
         document.getElementById('btn-cancel-close').addEventListener('click', () => this.closeClose());
         document.getElementById('btn-close-detail').addEventListener('click', () => this.closeDetail());

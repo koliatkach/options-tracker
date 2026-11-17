@@ -85,7 +85,6 @@ textarea {
     color: #e0e0e0;
     border: 1px solid #3a3a3a;
 }
-
 .btn-secondary:hover { background: #3a3a3a; }
 .btn-secondary:disabled { opacity: 0.4; cursor: not-allowed; }
 
@@ -95,7 +94,6 @@ textarea {
     padding: 4px 8px;
     font-size: 16px;
 }
-
 .btn-icon:hover { color: #f87171; }
 
 /* Статистика */
@@ -176,7 +174,7 @@ td {
 
 tr:hover { background: #222; }
 
-/* Бейджи */
+/* Бейджі */
 .badge {
     display: inline-block;
     padding: 3px 8px;
@@ -194,14 +192,13 @@ tr:hover { background: #222; }
     padding: 32px;
     color: #555;
 }
-
 .empty-state span {
     font-size: 36px;
     display: block;
     margin-bottom: 8px;
 }
 
-/* Модальні вікна */
+/* Модальні */
 .modal {
     display: none;
     position: fixed;
@@ -212,7 +209,6 @@ tr:hover { background: #222; }
     justify-content: center;
     align-items: center;
 }
-
 .modal.active { display: flex; }
 
 .modal-content {
@@ -238,8 +234,32 @@ tr:hover { background: #222; }
     gap: 8px;
     margin-top: 4px;
 }
-
 .modal-actions button { flex: 1; }
+
+/* Таби типів */
+.type-tabs {
+    display: inline-flex;
+    border-radius: 999px;
+    background: #111827;
+    padding: 2px;
+    border: 1px solid #374151;
+}
+
+.tab-button {
+    background: transparent;
+    border: none;
+    color: #9ca3af;
+    padding: 6px 12px;
+    border-radius: 999px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.tab-button.active {
+    background: #4ade80;
+    color: #0f172a;
+}
 
 @media (max-width: 700px) {
     .header-row { flex-direction: column; align-items: flex-start; }

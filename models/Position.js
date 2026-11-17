@@ -30,6 +30,11 @@ const PositionSchema = new mongoose.Schema({
         uppercase: true,
         trim: true
     },
+    type: {
+        type: String,
+        enum: ['options', 'futures', 'spot'],
+        required: true
+    },
     entry: {
         type: Number,
         required: true
@@ -48,7 +53,7 @@ const PositionSchema = new mongoose.Schema({
     },
     closes: [CloseSchema]
 }, {
-    timestamps: true  // автоматично додає createdAt і updatedAt
+    timestamps: true
 });
 
 module.exports = mongoose.model('Position', PositionSchema);

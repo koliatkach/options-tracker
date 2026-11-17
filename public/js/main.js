@@ -2,11 +2,13 @@
 (function () {
     let positions = [];
     let autoRefreshTimer = null;
+    let currentType = 'options'; // за замовчуванням вкладка "Опціони"
 
-    // Встановлюємо сьогоднішню дату за замовчуванням
+    // сьогоднішня дата за замовчуванням
     document.getElementById('inp-date').valueAsDate = new Date();
+    document.getElementById('modal-exit-date').valueAsDate = new Date();
 
-    // Ініціалізація модалів
+    // ініціалізація модалів
     Modals.init(async (data) => {
         try {
             await API.closePosition(data.id, {
@@ -22,7 +24,7 @@
         }
     });
 
-    // Ініціалізація рендеру
+    // ініціалізація рендеру
     Render.init(
         (position) => Modals.openClose(position, null),
         (position) => Modals.openDetail(position),
@@ -37,30 +39,44 @@
         }
     );
 
-    // Фільтр
+    // таби типів
+    document.querySelectorAll('.tab-button').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const type = btn.dataset.type;
+            currentType = type;
+
+            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+
+            renderWithFilter();
+        });
+    });
+
+    // фільтр статусу
     document.getElementById('filter-status').addEventListener('change', () => {
         renderWithFilter();
     });
 
-    // Кнопка додавання
+    // кнопка додавання
     document.getElementById('btn-add').addEventListener('click', async () => {
         const date = document.getElementById('inp-date').value;
         const ticker = document.getElementById('inp-ticker').value.trim().toUpperCase();
+        const type = document.getElementById('inp-type').value;
         const entry = parseFloat(document.getElementById('inp-entry').value);
         const qty = parseFloat(document.getElementById('inp-qty').value);
         const reason = document.getElementById('inp-reason').value.trim();
 
-        if (!date || !ticker || isNaN(entry) || isNaN(qty) || qty === 0) {
-            alert('Заповни всі поля (кількість ≠ 0)');
+        if (!date || !ticker || !type || isNaN(entry) || isNaN(qty) || qty === 0) {
+            alert('Заповни: дата, тікер, тип, ціну входу, кількість (≠ 0)');
             return;
         }
 
         try {
-            await API.createPosition({ date, ticker, entry, qty, reason });
+            await API.createPosition({ date, ticker, type, entry, qty, reason });
             await loadAndRender();
 
-            // Очистка форми
             document.getElementById('inp-ticker').value = '';
+            document.getElementById('inp-type').value = '';
             document.getElementById('inp-entry').value = '';
             document.getElementById('inp-qty').value = '';
             document.getElementById('inp-reason').value = '';
@@ -69,7 +85,6 @@
         }
     });
 
-    // Завантаження і рендер
     async function loadAndRender() {
         try {
             positions = await API.getPositions();
@@ -81,17 +96,16 @@
     }
 
     function renderWithFilter() {
-        const filter = document.getElementById('filter-status').value;
-        Render.positions(positions, filter);
+        const status = document.getElementById('filter-status').value;
+        Render.positions(positions, { status, type: currentType });
     }
 
-    // Автооновлення кожні 5 секунд
     function startAutoRefresh() {
         if (autoRefreshTimer) clearInterval(autoRefreshTimer);
         autoRefreshTimer = setInterval(loadAndRender, 5000);
     }
 
-    // Старт
+    // старт
     loadAndRender();
     startAutoRefresh();
 })();

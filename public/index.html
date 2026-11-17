@@ -22,7 +22,7 @@
         </div>
         <div class="stat-card">
             <div class="value" id="stat-pnl">$0</div>
-            <div class="label">Загальний P&L</div>
+            <div class="label">Загальний реалізований P&L</div>
         </div>
     </div>
 
@@ -37,6 +37,15 @@
             <div class="form-group">
                 <label>Тікер</label>
                 <input type="text" id="inp-ticker" placeholder="AAPL, SPY...">
+            </div>
+            <div class="form-group">
+                <label>Тип</label>
+                <select id="inp-type">
+                    <option value="">-- Вибери тип --</option>
+                    <option value="options">Опціони</option>
+                    <option value="futures">Ф’ючерси</option>
+                    <option value="spot">Спот</option>
+                </select>
             </div>
             <div class="form-group">
                 <label>Ціна входу</label>
@@ -59,8 +68,14 @@
         <div class="header-row">
             <h2>📋 Позиції</h2>
             <div class="header-row-right">
+                <div class="type-tabs">
+                    <button class="tab-button active" data-type="options">Опціони</button>
+                    <button class="tab-button" data-type="futures">Ф’ючерси</button>
+                    <button class="tab-button" data-type="spot">Спот</button>
+                </div>
+
                 <select id="filter-status" class="filter-select">
-                    <option value="all">Всі</option>
+                    <option value="all">Всі статуси</option>
                     <option value="open">Відкриті</option>
                     <option value="closed">Закриті</option>
                 </select>
@@ -114,7 +129,6 @@
     </div>
 </div>
 
-<!-- Скрипти -->
 <script src="/js/api.js"></script>
 <script src="/js/stats.js"></script>
 <script src="/js/modals.js"></script>

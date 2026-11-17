@@ -1,6 +1,6 @@
 const Position = require('../models/Position');
 
-// Отримати всі позиції
+// GET /api/positions
 const getPositions = async (req, res, next) => {
     try {
         const positions = await Position.find().sort({ createdAt: -1 });
@@ -10,18 +10,23 @@ const getPositions = async (req, res, next) => {
     }
 };
 
-// Додати нову позицію
+// POST /api/positions
 const createPosition = async (req, res, next) => {
     try {
-        const { date, ticker, entry, qty, reason } = req.body;
+        const { date, ticker, entry, qty, reason, type } = req.body;
 
         if (!date || !ticker || typeof entry !== 'number' || typeof qty !== 'number' || qty === 0) {
-            return res.status(400).json({ error: 'Невірні дані. Перевір всі поля.' });
+            return res.status(400).json({ error: 'Невірні дані. Перевір дата, тікер, ціну входу, кількість.' });
+        }
+
+        if (!type || !['options', 'futures', 'spot'].includes(type)) {
+            return res.status(400).json({ error: 'Тип обовʼязковий (options / futures / spot).' });
         }
 
         const position = await Position.create({
             date,
             ticker,
+            type,
             entry,
             totalQty: qty,
             openQty: qty,
@@ -35,7 +40,7 @@ const createPosition = async (req, res, next) => {
     }
 };
 
-// Часткове/повне закриття позиції
+// POST /api/positions/:id/close
 const closePosition = async (req, res, next) => {
     try {
         const position = await Position.findById(req.params.id);
@@ -50,20 +55,25 @@ const closePosition = async (req, res, next) => {
             return res.status(400).json({ error: 'Невірні дані для закриття' });
         }
 
-        // Перевірка напрямку (long/short)
         if (position.openQty > 0) {
             if (qty <= 0 || qty > position.openQty + 1e-9) {
-                return res.status(400).json({ error: 'Кількість перевищує відкритий обсяг' });
+                return res.status(400).json({ error: 'Кількість перевищує відкритий обсяг (long).' });
             }
         } else if (position.openQty < 0) {
             if (qty >= 0 || qty < position.openQty - 1e-9) {
-                return res.status(400).json({ error: 'Кількість перевищує відкритий обсяг' });
+                return res.status(400).json({ error: 'Кількість перевищує відкритий обсяг (short).' });
             }
         } else {
             return res.status(400).json({ error: 'Позиція вже повністю закрита' });
         }
 
-        position.closes.push({ qty, price, date: date || null, notes: notes || '' });
+        position.closes.push({
+            qty,
+            price,
+            date: date || null,
+            notes: notes || ''
+        });
+
         position.openQty -= qty;
 
         await position.save();
@@ -73,7 +83,7 @@ const closePosition = async (req, res, next) => {
     }
 };
 
-// Видалити позицію
+// DELETE /api/positions/:id
 const deletePosition = async (req, res, next) => {
     try {
         const position = await Position.findByIdAndDelete(req.params.id);
