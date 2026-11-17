@@ -22,18 +22,22 @@ const Render = {
         const absQty = Math.abs(position.totalQty || 0);
         const entry = Number(position.entry) || 0;
 
-        if (!absQty || !entry || !this._DEPOSIT) return null;
+        if (!this._DEPOSIT) return null;
 
         let riskAbs = 0;
 
         if (position.type === 'options') {
-            // Твоя формула: (ціна входу * кількість) / 30000
+            // Опціони: (ціна входу * кількість)
+            if (!absQty || !entry) return null;
             riskAbs = entry * absQty;
         } else if (position.type === 'futures') {
+            // Ф'ючерси: довжину стопу просто ділимо на депозит
             const stop = Number(position.stopSize) || 0;
             if (!stop) return null;
-            riskAbs = absQty * stop;
+            riskAbs = stop;
         } else if (position.type === 'spot') {
+            // Спот: кількість токенів * ціна
+            if (!absQty || !entry) return null;
             riskAbs = absQty * entry;
         } else {
             return null;
